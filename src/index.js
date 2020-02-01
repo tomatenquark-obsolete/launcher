@@ -11,6 +11,10 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 let mainWindow;
 
 const createWindow = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    require('vue-devtools').install()
+  }
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,

@@ -32,11 +32,15 @@ export default {
     asset: null
   },
   mutations: {
+    resetProgress(state) {
+      state.progress.max = 0
+      state.progress.current = 0
+    },
     setMax(state, max) {
-      state.max = max
+      state.progress.max = max
     },
     setCurrent(state, current) {
-      state.current = current
+      state.progress.current = current
     },
     setAsset(state, asset) {
       state.asset = asset
@@ -57,12 +61,21 @@ export default {
 
       if (!context.getters.installed) {
         const asset = getReleaseAssetForPlatform(release)
+        context.commit('setMax', asset.size)
+
         const archive = await fetch(asset.browser_download_url)
-        const bytes = await archive.arrayBuffer()
+        const reader = archive.body.getReader()
         const passThrough = new stream.PassThrough()
-        passThrough.end(Buffer.from(bytes))
+        while (true) {
+          const { done, value} = await reader.read()
+          if (done) break
+
+          context.commit('setCurrent', context.state.progress.current += value.length)
+          passThrough.write(value)
+        }
         passThrough.pipe(Extract({ path: path.join(dataPath, 'bin') }))
         context.commit('setAsset', asset)
+        context.commit('resetProgress')
       }
     }
   }

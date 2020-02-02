@@ -27,8 +27,7 @@ function getBinaryNameForPlatform() {
 
 export default {
   template: `
-      <!--<button class="button is-success":disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed']" @click="start">Play!</button>-->
-      <button @click="start">Play!</button>
+      <button class="button is-success":disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed']" @click="start">Play!</button>
   `,
   methods: {
     async start () {

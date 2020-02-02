@@ -11,10 +11,6 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 let mainWindow
 
 const createWindow = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    require('vue-devtools').install()
-  }
-
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -27,8 +23,12 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (process.env.NODE_ENV === 'development') {
+    // Load the Vue Devtools
+    require('vue-devtools').install()
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools()
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {

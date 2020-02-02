@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const EventEmitter = require('events')
 
-const { clone, plugins } = require('isomorphic-git')
+const { clone, log, plugins } = require('isomorphic-git')
 
 import { dataPath } from '../utils.js'
 
@@ -30,6 +30,9 @@ export default {
     },
     toggleIndeterminate(state) {
       state.progress.indeterminate = !state.progress.indeterminate
+    },
+    setCommit(state, commit) {
+      state.commit = commit
     }
   },
   getters: {
@@ -43,10 +46,11 @@ export default {
         const mediaDirectory = path.join(dataPath, 'media')
         const emitter = new EventEmitter()
         plugins.set('emitter', emitter)
-        emitter.on('message', function(message) {
+        emitter.on('message', (message) => {
           console.debug(message)
         })
-        emitter.on('progress', function(progress) {
+
+        const trackProgress = (progress) => {
           if (progress.lengthComputable) {
             if (context.state.progress.indeterminate) {
               context.commit('toggleIndeterminate')
@@ -54,17 +58,25 @@ export default {
             }
             context.commit('setCurrent', progress.loaded)
           }
-        })
+        }
+        emitter.on('progress', trackProgress)
 
         context.commit('toggleIndeterminate')
         await clone({
           fs,
           dir: mediaDirectory,
-          //url: 'https://github.com/tomatenquark/media',
-          url: 'https://github.com/pre-commit/demo-repo.git',
+          url: 'https://github.com/tomatenquark/media',
           ref: 'master'
         })
+        emitter.off('progress', trackProgress)
         context.commit('resetProgress')
+        const commits = await log({
+          fs,
+          dir: mediaDirectory,
+          depth: 1,
+          ref: 'master'
+        })
+        context.commit('setCommit', commits.shift())
       }
     }
   }

@@ -30,6 +30,7 @@ export default {
       max: 0,
       current: 0
     },
+    chmod: false,
     asset: null
   },
   mutations: {
@@ -45,6 +46,9 @@ export default {
     },
     setAsset(state, asset) {
       state.asset = asset
+    },
+    toggleChmod(state) {
+      state.chmod = !state.chmod
     }
   },
   getters: {
@@ -76,6 +80,9 @@ export default {
         }
         passThrough.pipe(Extract({ path: path.join(dataPath, 'bin') }))
         context.commit('setAsset', asset)
+        if (context.state.chmod) {
+          context.commit('toggleChmod')
+        }
         context.commit('resetProgress')
       }
     }

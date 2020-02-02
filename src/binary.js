@@ -15,8 +15,7 @@ export default {
       </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item">Update</a>
-        <a class="card-footer-item">Install</a>
+        <a class="card-footer-item" @click="$store.dispatch('updateBinary')">Install</a>
     </footer>
   </div>
   `

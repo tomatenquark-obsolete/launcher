@@ -1,10 +1,10 @@
 import Vue from '../node_modules/vue/dist/vue.esm.browser.js'
 import Vuex from '../node_modules/vuex/dist/vuex.esm.browser.js'
 
-import Store from './store.js'
-import Binary from './binary.js'
-import Media from './media.js'
-import Play from './play.js'
+import Store from './store/index.js'
+import Binary from './components/binary.js'
+import Media from './components/media.js'
+import Play from './components/play.js'
 
 Vue.use(Vuex)
 const store = new Vuex.Store(Store)

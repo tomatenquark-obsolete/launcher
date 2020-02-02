@@ -38,6 +38,9 @@ export default {
   getters: {
     installed(state) {
       return state.commit !== null
+    },
+    updated_at(state, getters) {
+      return (getters.installed) ? new Date(state.commit.committer.timestamp * 1000) : null
     }
   },
   actions: {

@@ -4,14 +4,12 @@ export default {
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-4">Sauerbraten binary</p>
+          <p class="title is-4"><i class="fas fa-running"></i> Binaries</p>
         </div>
       </div>
   
-      <div class="content">
-        This binary is built by tomatenquark and necessary to play the game.
-        <br>
-        <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+      <div class="content" v-if="$store.getters['binary/installed']">
+        <code>{{ $store.state.binary.asset.name }}</code> released on <time>{{ $store.getters['binary/created_at'].toLocaleDateString() }}</time> is currently installed.
       </div>
     </div>
     <footer class="card-footer">

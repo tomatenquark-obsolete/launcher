@@ -5,22 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Launcher</title>
     <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css">
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
   </head>
   <body>
     <div id="app">
       <section class="section">
         <div class="container">
-          <h1 class="title">
-            Welcome 👋
-          </h1>
-          <binary></binary>
-          <br>
-          <media></media>
-          <br>
-          <play></play>
+          <div class="columns">
+            <div class="column">
+              <h1 class="title">
+                Welcome 👋
+              </h1>
+            </div>
+          </div>
+          <div class="column">
+            <p><code>Launcher</code> helps you set up <a onclick="openProjectLink()">Tomatenquark</a> quickly.</p>
+            <p>If you run into any issues please feel free to contact. Feedback is highly appreciated.</p>
+          </div>
+          <div class="column">
+            <binary></binary>
+          </div>
+          <div class="column">
+            <media></media>
+          </div>
+          <div class="column">
+            <play></play>
+          </div>
         </div>
       </section>
     </div>
     <script type="module" src="app.js"></script>
+    <script type="application/javascript">
+      const { shell } = require('electron')
+      function openProjectLink() {
+        shell.openExternal('http://tomatenquark.github.io/')
+      }
+    </script>
   </body>
 </html>

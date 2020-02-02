@@ -27,7 +27,17 @@ function getBinaryNameForPlatform() {
 
 export default {
   template: `
-      <button class="button is-success":disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed']" @click="start">Play!</button>
+    <div class="columns is-mobile">
+      <div class="column">
+        <p v-if="!$store.getters['binary/installed'] && !$store.getters['media/installed']">Installing <code>binaries</code> and <code>media</code> is required before running the game.</p>
+        <p v-else-if="!$store.getters['binary/installed']">Please install <code>binaries</code> before playing.</p>
+        <p v-else-if="!$store.getters['media/installed']">Please install <code>media</code> before playing.</p>
+        <p v-else>You're all set. Have fun and good luck!</p>
+      </div>
+      <div class="column" align="right">
+        <button class="button is-success level-item" :disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed']" @click="start">Play!</button>                          
+      </div>
+    </div>
   `,
   methods: {
     async start () {
@@ -38,7 +48,7 @@ export default {
         this.$store.commit('binary/toggleChmod')
       }
 
-      const args = ['-q', path.join(dataPath, 'config'), '-k', path.join(dataPath, 'media'), '-q', 'log.txt']
+      const args = ['-q', path.join(dataPath, 'media')]
       child_process.spawn(binary, args, {
         cwd: path.join(dataPath, 'bin'),
         detached: true

@@ -4,14 +4,12 @@ export default {
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-4">Sauerbraten media</p>
+          <p class="title is-4"><i class="fas fa-cubes"></i> Media</p>
         </div>
       </div>
   
-      <div class="content">
-        The media is hosted by tomat and necessary to play the game.
-        <br>
-        <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+      <div class="content" v-if="$store.getters['media/installed']">
+        Last recently updated on <time>{{ $store.getters['media/updated_at'].toLocaleDateString() }}</time> by <code>{{ $store.state.media.commit.committer.name }}</code>.
       </div>
     </div>
     <footer class="card-footer">

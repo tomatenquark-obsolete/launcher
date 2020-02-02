@@ -1,5 +1,5 @@
+import { getLatestRelease } from '../utils.js'
 const { lt } = require('semver')
-import { dataPath, getLatestRelease } from '../utils.js';
 
 export default {
   template: `
@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    async update() {
+    async update () {
       await this.$store.dispatch('binary/update')
       this.updatable = false
     }

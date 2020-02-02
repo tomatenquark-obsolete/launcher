@@ -1,14 +1,14 @@
+import { dataPath } from '../utils.js'
+
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
 const child_process = require('child_process')
 const util = require('util')
 
-import { dataPath } from '../utils.js';
-
-function getBinaryNameForPlatform() {
+function getBinaryNameForPlatform () {
   let binary
-  switch(os.platform()) {
+  switch (os.platform()) {
     case 'win32':
       binary = 'bin64/sauerbraten_debug.exe'
       break
@@ -20,7 +20,6 @@ function getBinaryNameForPlatform() {
       break
     default:
       throw new Error(`Platform ${os.platform()} is not supported.`)
-      break
   }
   return binary
 }

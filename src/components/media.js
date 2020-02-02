@@ -26,7 +26,7 @@ export default {
     }
   },
   methods: {
-    async update() {
+    async update () {
       await this.$store.dispatch('binary/update')
       this.updatable = false
     }

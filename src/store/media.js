@@ -1,10 +1,10 @@
+import { dataPath } from '../utils.js'
+
 const path = require('path')
 const fs = require('fs')
 const EventEmitter = require('events')
 
 const { clone, log, plugins } = require('isomorphic-git')
-
-import { dataPath } from '../utils.js'
 
 export default {
   namespaced: true,
@@ -17,34 +17,34 @@ export default {
     commit: null
   },
   mutations: {
-    resetProgress(state) {
+    resetProgress (state) {
       state.progress.indeterminate = false
       state.progress.max = 0
       state.progress.current = 0
     },
-    setMax(state, max) {
+    setMax (state, max) {
       state.progress.max = max
     },
-    setCurrent(state, current) {
+    setCurrent (state, current) {
       state.progress.current = current
     },
-    toggleIndeterminate(state) {
+    toggleIndeterminate (state) {
       state.progress.indeterminate = !state.progress.indeterminate
     },
-    setCommit(state, commit) {
+    setCommit (state, commit) {
       state.commit = commit
     }
   },
   getters: {
-    installed(state) {
+    installed (state) {
       return state.commit !== null
     },
-    updated_at(state, getters) {
+    updated_at (state, getters) {
       return (getters.installed) ? new Date(state.commit.committer.timestamp * 1000) : null
     }
   },
   actions: {
-    async update(context) {
+    async update (context) {
       if (!context.getters.installed) {
         const mediaDirectory = path.join(dataPath, 'media')
         const emitter = new EventEmitter()

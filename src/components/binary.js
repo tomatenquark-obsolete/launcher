@@ -16,7 +16,7 @@ export default {
     </div>
     <footer class="card-footer">
         <progress class="progress" :value="$store.state.binary.progress.current" :max="$store.state.binary.progress.max" v-if="$store.state.binary.progress.max > 0"></progress>
-        <a class="card-footer-item" @click="$store.dispatch('updateBinary')" v-else>Install</a>
+        <a class="card-footer-item" @click="$store.dispatch('binary/update')" v-else>Install</a>
     </footer>
   </div>
   `

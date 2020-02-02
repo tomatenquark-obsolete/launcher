@@ -24,6 +24,7 @@ function getReleaseAssetForPlatform(release) {
 }
 
 export default {
+  namespaced: true,
   state: {
     progress: {
       max: 0,
@@ -47,19 +48,19 @@ export default {
     }
   },
   getters: {
-    binaryInstalled(state) {
+    installed(state) {
       return state.asset !== null
     },
     created_at(state, getters) {
-      return (getters.binaryInstalled) ? new Date(state.asset.created_at) : null
+      return (getters.installed) ? new Date(state.asset.created_at) : null
     }
   },
   actions: {
-    async updateBinary(context) {
+    async update(context) {
       const releaseResponse = await fetch('https://api.github.com/repos/tomatenquark/code/releases/latest')
       const release = await releaseResponse.json()
 
-      if (!context.getters.binaryInstalled) {
+      if (!context.getters.installed) {
         const asset = getReleaseAssetForPlatform(release)
         context.commit('setMax', asset.size)
 

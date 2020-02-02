@@ -15,7 +15,9 @@ export default {
       </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item" @click="$store.dispatch('updateMedia')">Install</a>
+        <progress class="progress" max="100" v-if="$store.state.media.progress.indeterminate"></progress>
+        <progress class="progress" :value="$store.state.media.progress.current" :max="$store.state.media.progress.max" v-else-if="$store.state.media.progress.max > 0"></progress>
+        <a class="card-footer-item" @click="$store.dispatch('media/update')" v-else>Install</a>
     </footer>
   </div>
   `

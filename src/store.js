@@ -1,9 +1,9 @@
 const fs = require('fs')
-const zlib = require('zlib')
 const stream = require('stream')
 const path = require('path')
 const os = require('os')
 
+const git = require('isomorphic-git')
 const unzipper = require('unzipper')
 const envPaths = require('env-paths')
 
@@ -53,6 +53,19 @@ export default {
         passThrough.pipe(unzipper.Extract({ path: path.join(paths.data, 'bin') }))
       } else if (compareVersion(context.state.binary.version, release.tag_name) === -1) {
         // Download binary
+      }
+    },
+    async updateMedia(context) {
+      if (!context.state.media.installed) {
+        const paths = envPaths('tomatenquark')
+        const mediaDirectory = path.join(paths.data, 'media')
+        await git.clone({
+          fs,
+          dir: mediaDirectory,
+          url: 'https://github.com/tomatenquark/media',
+          ref: 'master'
+        })
+        console.log("Done")
       }
     }
   }

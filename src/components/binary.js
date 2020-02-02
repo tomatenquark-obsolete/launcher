@@ -1,3 +1,6 @@
+const { lt } = require('semver')
+import { dataPath, getLatestRelease } from '../utils.js';
+
 export default {
   template: `
   <div class="card">
@@ -9,13 +12,33 @@ export default {
       </div>
   
       <div class="content" v-if="$store.getters['binary/installed']">
-        <code>{{ $store.state.binary.asset.name }}</code> released on <time>{{ $store.getters['binary/created_at'].toLocaleDateString() }}</time> is currently installed.
+        <code>{{ $store.state.binary.release.tag_name }}</code> released on <time>{{ $store.getters['binary/created_at'].toLocaleDateString() }}</time> currently installed.
       </div>
     </div>
     <footer class="card-footer">
         <progress class="progress" :value="$store.state.binary.progress.current" :max="$store.state.binary.progress.max" v-if="$store.state.binary.progress.max > 0"></progress>
         <a class="card-footer-item" @click="$store.dispatch('binary/update')" v-else-if="!$store.getters['binary/installed']">Install</a>
+        <a class="card-footer-item" @click="$store.dispatch('binary/update')" v-if="updatable && $store.state.binary.progress.max === 0">Update</a>
     </footer>
   </div>
-  `
+  `,
+  data () {
+    return {
+      updatable: false
+    }
+  },
+  async mounted () {
+    if (this.$store.getters['binary/installed']) {
+      const release = await getLatestRelease()
+      if (lt(this.$store.state.binary.release.tag_name, release.tag_name)) {
+        this.updatable = true
+      }
+    }
+  },
+  methods: {
+    async updateGame() {
+      await this.$store.dispatch('binary/update')
+      this.updatable = false
+    }
+  }
 }

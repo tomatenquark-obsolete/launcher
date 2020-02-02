@@ -4,7 +4,7 @@ const stream = require('stream')
 
 const { Extract } = require('unzipper')
 
-import { dataPath } from '../utils.js';
+import { dataPath, getLatestRelease } from '../utils.js';
 
 function getReleaseAssetForPlatform(release) {
   let platform
@@ -31,6 +31,7 @@ export default {
       current: 0
     },
     chmod: false,
+    release: null,
     asset: null
   },
   mutations: {
@@ -47,6 +48,9 @@ export default {
     setAsset(state, asset) {
       state.asset = asset
     },
+    setRelease(state, release) {
+      state.release = release
+    },
     toggleChmod(state) {
       state.chmod = !state.chmod
     }
@@ -61,8 +65,7 @@ export default {
   },
   actions: {
     async update(context) {
-      const releaseResponse = await fetch('https://api.github.com/repos/tomatenquark/code/releases/latest')
-      const release = await releaseResponse.json()
+      const release = await getLatestRelease()
 
       if (!context.getters.installed) {
         const asset = getReleaseAssetForPlatform(release)
@@ -79,6 +82,7 @@ export default {
           passThrough.write(value)
         }
         passThrough.pipe(Extract({ path: path.join(dataPath, 'bin') }))
+        context.commit('setRelease', release)
         context.commit('setAsset', asset)
         if (context.state.chmod) {
           context.commit('toggleChmod')

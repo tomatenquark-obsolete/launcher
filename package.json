@@ -50,6 +50,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "env-paths": "^2.2.0",
     "isomorphic-git": "^0.78.3",
+    "semver": "^7.1.2",
     "unzipper": "^0.10.7",
     "vue": "^2.6.11",
     "vuex": "^3.1.2",

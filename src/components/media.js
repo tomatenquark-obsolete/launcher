@@ -15,7 +15,6 @@ export default {
       </div>
     </div>
     <footer class="card-footer">
-        <a class="card-footer-item" v-if="$store.state.media.installed" @click="$store.dispatch('updateMedia')">Update</a>
         <a class="card-footer-item" @click="$store.dispatch('updateMedia')">Install</a>
     </footer>
   </div>

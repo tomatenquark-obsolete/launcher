@@ -47,11 +47,11 @@ export default {
     }
   },
   getters: {
-    installed(state) {
+    binaryInstalled(state) {
       return state.asset !== null
     },
     created_at(state, getters) {
-      return (getters.installed) ? new Date(state.asset.created_at) : null
+      return (getters.binaryInstalled) ? new Date(state.asset.created_at) : null
     }
   },
   actions: {
@@ -59,7 +59,7 @@ export default {
       const releaseResponse = await fetch('https://api.github.com/repos/tomatenquark/code/releases/latest')
       const release = await releaseResponse.json()
 
-      if (!context.getters.installed) {
+      if (!context.getters.binaryInstalled) {
         const asset = getReleaseAssetForPlatform(release)
         context.commit('setMax', asset.size)
 

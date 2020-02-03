@@ -7,6 +7,6 @@ const paths = envPaths('tomatenquark', {
 export const dataPath = paths.data
 
 export async function getLatestRelease () {
-  const releaseResponse = await fetch('https://api.github.com/repos/tomatenquark/code/releases/latest')
+  const releaseResponse = await fetch('https://api.github.com/repos/tomatenquark/code/releases/latest') // eslint-disable-line
   return releaseResponse.json()
 }

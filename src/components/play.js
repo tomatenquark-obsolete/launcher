@@ -3,7 +3,7 @@ import { dataPath } from '../utils.js'
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
-const child_process = require('child_process')
+const child_process = require('child_process') // eslint-disable-line
 const util = require('util')
 
 function getBinaryNameForPlatform () {

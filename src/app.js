@@ -13,7 +13,7 @@ const store = new Vuex.Store({
   plugins: [createPersistedState()]
 })
 
-new Vue({
+new Vue({ // eslint-disable-line
   el: '#app',
   store,
   components: {

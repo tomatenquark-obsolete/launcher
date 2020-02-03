@@ -72,7 +72,7 @@ export default {
         const asset = getReleaseAssetForPlatform(release)
         context.commit('setMax', asset.size)
 
-        const archive = await fetch(asset.browser_download_url)
+        const archive = await fetch(asset.browser_download_url) // eslint-disable-line
         const reader = archive.body.getReader()
         const passThrough = new stream.PassThrough()
         while (true) {

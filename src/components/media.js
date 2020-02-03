@@ -33,7 +33,7 @@ export default {
   },
   async mounted () {
     if (this.$store.getters['media/installed']) {
-      const request = await fetch('https://api.github.com/repos/tomatenquark/media/commits')
+      const request = await fetch('https://api.github.com/repos/tomatenquark/media/commits') // eslint-disable-line
       const commits = await request.json()
       const latestCommit = commits.shift()
       if (this.$store.getters['media/updated_at'] < new Date(latestCommit.commit.committer.date)) {

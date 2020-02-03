@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const EventEmitter = require('events')
 
-const { clone, log, plugins } = require('isomorphic-git')
+const { clone, log, plugins, pull } = require('isomorphic-git')
 
 export default {
   namespaced: true,
@@ -36,6 +36,9 @@ export default {
     }
   },
   getters: {
+    media_directory () {
+      return path.join(dataPath, 'media')
+    },
     installed (state) {
       return state.commit !== null
     },
@@ -44,9 +47,8 @@ export default {
     }
   },
   actions: {
-    async update (context) {
+    async install (context) {
       if (!context.getters.installed) {
-        const mediaDirectory = path.join(dataPath, 'media')
         const emitter = new EventEmitter()
         plugins.set('emitter', emitter)
         emitter.on('message', (message) => {
@@ -67,7 +69,7 @@ export default {
         context.commit('toggleIndeterminate')
         await clone({
           fs,
-          dir: mediaDirectory,
+          dir: context.getters.media_directory,
           url: 'https://github.com/tomatenquark/media',
           ref: 'master'
         })
@@ -75,7 +77,41 @@ export default {
         context.commit('resetProgress')
         const commits = await log({
           fs,
-          dir: mediaDirectory,
+          dir: context.getters.media_directory,
+          depth: 1,
+          ref: 'master'
+        })
+        context.commit('setCommit', commits.shift())
+      }
+    },
+    async update (context) {
+      if (context.getters.installed) {
+        const emitter = new EventEmitter()
+        plugins.set('emitter', emitter)
+
+        const trackProgress = (progress) => {
+          if (progress.lengthComputable) {
+            if (context.state.progress.indeterminate) {
+              context.commit('toggleIndeterminate')
+              context.commit('setMax', progress.total)
+            }
+            context.commit('setCurrent', progress.loaded)
+          }
+        }
+
+        emitter.on('progress', trackProgress)
+        context.commit('toggleIndeterminate')
+
+        await pull({
+          fs,
+          dir: context.getters.media_directory
+        })
+
+        emitter.off('progress', trackProgress)
+        context.commit('resetProgress')
+        const commits = await log({
+          fs,
+          dir: context.getters.media_directory,
           depth: 1,
           ref: 'master'
         })

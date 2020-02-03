@@ -1,0 +1,89 @@
+name: Continous deployment for the Tomatenquark launcher
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+            macos: true
+          - os: windows-latest
+            windows: true
+          - os: ubuntu-latest
+            ubuntu: true
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run make
+      - name: Archive build for OSX
+        uses: actions/upload-artifact@v1
+        if: matrix.macos
+        with:
+          name: ${{ matrix.os }}
+          path: out/make/zip/darwin/x64/launcher-darwin-x64-1.0.0.zip
+      - name: Archive build for Windows
+        uses: actions/upload-artifact@v1
+        if: matrix.windows
+        with:
+          name: ${{ matrix.os }}
+          path: out/make/zip/win32/x64/launcher-win32-x64-1.0.0.zip
+      - name: Archive build for Ubuntu
+        uses: actions/upload-artifact@v1
+        if: matrix.ubuntu
+        with:
+          name: ${{ matrix.os }}
+          path: out/make/zip/linux/x64/launcher-linux-x64-1.0.0.zip
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+    - uses: actions/download-artifact@v1
+      with:
+        name: macos-latest
+    - uses: actions/download-artifact@v1
+      with:
+        name: windows-latest
+    - uses: actions/download-artifact@v1
+      with:
+        name: ubuntu-latest
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./macos-latest/launcher-darwin-x64-1.0.0.zip
+        asset_name: launcher-darwin-x64-1.0.0.zip
+        asset_content_type: application/zip
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./windows-latest/launcher-win32-x64-1.0.0.zip
+        asset_name: launcher-win32-x64-1.0.0.zip
+        asset_content_type: application/zip
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./ubuntu-latest/launcher-linux-x64-1.0.0.zip
+        asset_name: launcher-linux-x64-1.0.0.zip
+        asset_content_type: application/zip

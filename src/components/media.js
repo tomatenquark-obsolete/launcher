@@ -16,13 +16,18 @@ export default {
         <progress class="progress" max="100" v-if="$store.state.media.progress.indeterminate"></progress>
         <progress class="progress" :value="$store.state.media.progress.current" :max="$store.state.media.progress.max" v-else-if="$store.state.media.progress.max > 0"></progress>
         <a class="card-footer-item" @click="install" v-else-if="!$store.getters['media/installed']">Install</a>
-        <a class="card-footer-item" @click="update" v-if="updatable && !$store.state.media.progress.indeterminate && $store.state.media.progress.max == 0">Update</a>
+        <a class="card-footer-item" @click="update" v-if="updateable">Update</a>
     </footer>
   </div>
   `,
   data () {
     return {
-      updatable: false
+      updateAvailable: false
+    }
+  },
+  computed: {
+    updateable () {
+      return this.updateAvailable && !this.$store.state.media.progress.indeterminate && this.$store.state.media.progress.max === 0
     }
   },
   methods: {
@@ -38,7 +43,7 @@ export default {
     async update () {
       try {
         await this.$store.dispatch('media/update')
-        this.updatable = false
+        this.updateAvailable = false
       } catch (error) {
         this.$store.commit('pushError', error)
         console.log(error)
@@ -54,7 +59,7 @@ export default {
         const commits = await request.json()
         const latestCommit = commits.shift()
         if (this.$store.getters['media/updated_at'] < new Date(latestCommit.commit.committer.date)) {
-          this.updatable = true
+          this.updateAvailable = true
         }
       } catch (error) {
         this.$store.commit('pushError', error)

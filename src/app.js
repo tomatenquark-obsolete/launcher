@@ -12,7 +12,9 @@ import Mods from './components/mods.js'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   ...Store,
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState({
+    paths: ['mods', 'binary', 'media']
+  })]
 })
 
 new Vue({ // eslint-disable-line

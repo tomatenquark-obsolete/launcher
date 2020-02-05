@@ -7,6 +7,7 @@ import Errors from './components/errors.js'
 import Binary from './components/binary.js'
 import Media from './components/media.js'
 import Play from './components/play.js'
+import Mods from './components/mods.js'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -21,6 +22,7 @@ new Vue({ // eslint-disable-line
     Errors,
     Binary,
     Media,
-    Play
+    Play,
+    Mods
   }
 })

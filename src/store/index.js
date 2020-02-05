@@ -1,5 +1,6 @@
 import Binary from './binary.js'
 import Media from './media.js'
+import Mods from './mods.js'
 
 export default {
   state: {
@@ -16,6 +17,7 @@ export default {
     }
   },
   modules: {
+    mods: Mods,
     binary: Binary,
     media: Media
   }

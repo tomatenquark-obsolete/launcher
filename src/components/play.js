@@ -34,7 +34,7 @@ export default {
         <p v-else>You're all set. Have fun and good luck!</p>
       </div>
       <div class="column" align="right">
-        <button class="button is-success level-item" :disabled="!playable" @click="start">Play!</button>                          
+        <button class="button is-success" :disabled="!playable" @click="start">Play!</button>                          
       </div>
     </div>
   `,

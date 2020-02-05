@@ -19,8 +19,7 @@
             </div>
           </div>
           <div class="column">
-            <p><code>Launcher</code> helps you set up <a onclick="openProjectLink()">Tomatenquark</a> quickly.</p>
-            <p>If you run into any issues please feel free to contact. Feedback is highly appreciated.</p>
+            <mods></mods>
           </div>
           <div class="column">
             <errors></errors>
@@ -32,17 +31,12 @@
             <media></media>
           </div>
           <div class="column">
+            <hr>
             <play></play>
           </div>
         </div>
       </section>
     </div>
     <script type="module" src="app.js"></script>
-    <script type="application/javascript">
-      const { shell } = require('electron')
-      function openProjectLink() {
-        shell.openExternal('http://tomatenquark.github.io/')
-      }
-    </script>
   </body>
 </html>

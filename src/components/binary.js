@@ -17,7 +17,7 @@ export default {
     </div>
     <footer class="card-footer">
         <progress class="progress" :value="$store.state.binary.progress.current" :max="$store.state.binary.progress.max" v-if="$store.state.binary.progress.max > 0"></progress>
-        <a class="card-footer-item" @click="$store.dispatch('binary/update')" v-else-if="!$store.getters['binary/installed']">Install</a>
+        <a class="card-footer-item" @click="install" v-else-if="!$store.getters['binary/installed']">Install</a>
         <a class="card-footer-item" @click="update" v-if="updatable && $store.state.binary.progress.max === 0">Update</a>
     </footer>
   </div>
@@ -40,6 +40,15 @@ export default {
     }
   },
   methods: {
+    async install () {
+      try {
+        await this.$store.dispatch('binary/update')
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.commit('binary/resetProgress')
+      }
+    },
     async update () {
       try {
         await this.$store.dispatch('binary/update')

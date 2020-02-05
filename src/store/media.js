@@ -108,7 +108,6 @@ export default {
         })
 
         emitter.off('progress', trackProgress)
-        context.commit('resetProgress')
         const commits = await log({
           fs,
           dir: context.getters.media_directory,

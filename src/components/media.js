@@ -15,7 +15,7 @@ export default {
     <footer class="card-footer">
         <progress class="progress" max="100" v-if="$store.state.media.progress.indeterminate"></progress>
         <progress class="progress" :value="$store.state.media.progress.current" :max="$store.state.media.progress.max" v-else-if="$store.state.media.progress.max > 0"></progress>
-        <a class="card-footer-item" @click="$store.dispatch('media/install')" v-else-if="!$store.getters['media/installed']">Install</a>
+        <a class="card-footer-item" @click="install" v-else-if="!$store.getters['media/installed']">Install</a>
         <a class="card-footer-item" @click="update" v-if="updatable && !$store.state.media.progress.indeterminate">Update</a>
     </footer>
   </div>
@@ -26,6 +26,15 @@ export default {
     }
   },
   methods: {
+    async install () {
+      try {
+        await this.$store.dispatch('media/install')
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.commit('media/resetProgress')
+      }
+    },
     async update () {
       try {
         await this.$store.dispatch('media/update')

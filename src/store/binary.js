@@ -88,7 +88,6 @@ export default {
         if (context.state.chmod) {
           context.commit('toggleChmod')
         }
-        context.commit('resetProgress')
       }
     }
   }

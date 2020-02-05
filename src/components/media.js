@@ -40,6 +40,7 @@ export default {
         await this.$store.dispatch('media/update')
         this.updatable = false
       } catch (error) {
+        this.$store.commit('pushError', error)
         console.log(error)
       } finally {
         this.$store.commit('media/resetProgress')
@@ -55,8 +56,8 @@ export default {
         if (this.$store.getters['media/updated_at'] < new Date(latestCommit.commit.committer.date)) {
           this.updatable = true
         }
-      } catch (err) {
-        console.error(err)
+      } catch (error) {
+        this.$store.commit('pushError', error)
       }
     }
   }

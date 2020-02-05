@@ -44,7 +44,7 @@ export default {
       try {
         await this.$store.dispatch('binary/update')
       } catch (error) {
-        console.error(error)
+        this.$store.commit('pushError', error)
       } finally {
         this.$store.commit('binary/resetProgress')
       }
@@ -54,7 +54,7 @@ export default {
         await this.$store.dispatch('binary/update')
         this.updatable = false
       } catch (error) {
-        console.error(error)
+        this.$store.commit('pushError', error)
       } finally {
         this.$store.commit('binary/resetProgress')
       }

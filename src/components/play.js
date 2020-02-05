@@ -40,18 +40,26 @@ export default {
   `,
   methods: {
     async start () {
-      const binary = getBinaryNameForPlatform()
-      if (!this.$store.state.binary.chmod && ['darwin', 'linux'].includes(os.platform())) {
-        const chmodAsync = util.promisify(fs.chmod)
-        await chmodAsync(path.join(dataPath, 'bin', binary), 0o775) // Make sure it is actually executable
-        this.$store.commit('binary/toggleChmod')
-      }
+      try {
+        const binary = getBinaryNameForPlatform()
+        if (!this.$store.state.binary.chmod && ['darwin', 'linux'].includes(os.platform())) {
+          const chmodAsync = util.promisify(fs.chmod)
+          await chmodAsync(path.join(dataPath, 'bin', binary), 0o775) // Make sure it is actually executable
+          this.$store.commit('binary/toggleChmod')
+        }
 
-      const args = ['-q', path.join(dataPath, 'media')]
-      child_process.spawn(binary, args, {
-        cwd: path.join(dataPath, 'bin'),
-        detached: true
-      })
+        const args = ['-q', path.join(dataPath, 'media')]
+        const child = child_process.spawn(binary, args, {
+          cwd: path.join(dataPath, 'bin'),
+          detached: true
+        })
+        const context = this.$store
+        child.on('error', function (error) {
+          context.commit('pushError', error)
+        })
+      } catch (error) {
+        this.$store.commit('pushError', error)
+      }
     }
   }
 }

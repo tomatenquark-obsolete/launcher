@@ -13,7 +13,7 @@ export default {
           <section class="modal-card-body">
             <div class="list">
                 <div class="list-item" v-for="mod in $store.state.mods.shipped">
-                    <p>{{ mod.name }}</p>
+                    <p><input type="checkbox" @click="$store.commit('mods/toggleEnabled', mod.name)" :checked="mod.enabled"> {{ mod.name }}</p>
                 </div>
             </div>
           </section>

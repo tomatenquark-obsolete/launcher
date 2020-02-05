@@ -35,7 +35,7 @@ export default {
           this.updatable = true
         }
       } catch (error) {
-        console.error(error)
+        this.$store.commit('pushError', error)
       }
     }
   },

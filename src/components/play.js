@@ -34,7 +34,7 @@ export default {
         <p v-else>You're all set. Have fun and good luck!</p>
       </div>
       <div class="column" align="right">
-        <button class="button is-success level-item" :disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed']" @click="start">Play!</button>                          
+        <button class="button is-success level-item" :disabled="!$store.getters['binary/installed'] || !$store.getters['media/installed'] || $store.state.media.progress.indeterminate || $store.state.media.progress.max != 0" @click="start">Play!</button>                          
       </div>
     </div>
   `,

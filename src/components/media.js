@@ -27,17 +27,27 @@ export default {
   },
   methods: {
     async update () {
-      await this.$store.dispatch('media/update')
-      this.updatable = false
+      try {
+        await this.$store.dispatch('media/update')
+        this.updatable = false
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.$store.commit('media/resetProgress')
+      }
     }
   },
   async mounted () {
     if (this.$store.getters['media/installed']) {
-      const request = await fetch('https://api.github.com/repos/tomatenquark/media/commits') // eslint-disable-line
-      const commits = await request.json()
-      const latestCommit = commits.shift()
-      if (this.$store.getters['media/updated_at'] < new Date(latestCommit.commit.committer.date)) {
-        this.updatable = true
+      try {
+        const request = await fetch('https://api.github.com/repos/tomatenquark/media/commits') // eslint-disable-line
+        const commits = await request.json()
+        const latestCommit = commits.shift()
+        if (this.$store.getters['media/updated_at'] < new Date(latestCommit.commit.committer.date)) {
+          this.updatable = true
+        }
+      } catch (err) {
+        console.error(err)
       }
     }
   }

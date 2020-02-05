@@ -29,16 +29,26 @@ export default {
   },
   async mounted () {
     if (this.$store.getters['binary/installed']) {
-      const release = await getLatestRelease()
-      if (lt(this.$store.state.binary.release.tag_name, release.tag_name)) {
-        this.updatable = true
+      try {
+        const release = await getLatestRelease()
+        if (lt(this.$store.state.binary.release.tag_name, release.tag_name)) {
+          this.updatable = true
+        }
+      } catch (error) {
+        console.error(error)
       }
     }
   },
   methods: {
     async update () {
-      await this.$store.dispatch('binary/update')
-      this.updatable = false
+      try {
+        await this.$store.dispatch('binary/update')
+        this.updatable = false
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.commit('binary/resetProgress')
+      }
     }
   }
 }

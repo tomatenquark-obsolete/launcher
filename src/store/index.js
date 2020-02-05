@@ -6,10 +6,10 @@ export default {
     errors: []
   },
   mutations: {
-    pushError(state, error) {
+    pushError (state, error) {
       state.errors.push(error)
     },
-    spliceError(state, index) {
+    spliceError (state, index) {
       if (state.errors.length) {
         return state.errors.splice(index, 1)
       }
